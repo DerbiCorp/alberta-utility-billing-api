@@ -16,13 +16,91 @@ paths:
   /accounts:
     get:
       summary: Get user accounts
-      description: "Get a list of accounts associated with a customer"
+      description: "Get a list of accounts associated with a user"
       parameters:
         - $ref: '#/components/parameters/X-Auth-Token'
         - $ref: '#/components/parameters/UserEmail'
       responses:
         '200':
           $ref: '#/components/responses/AccountsFetched'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/ResourceNotFound'
+  /sites:
+    post:
+      summary: Query sites
+      description: Query a set of sites
+      parameters:
+        - $ref: '#/components/parameters/X-Auth-Token'
+        - $ref: '#/components/parameters/UserEmail'
+      requestBody:
+        $ref: '#/components/requestBodies/SiteIdArray'
+      responses:
+        '200':
+          $ref: '#/components/responses/SitesFetched'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/ResourceNotFound'
+  /statements:
+    post:
+      summary: Query statements
+      description: Query a set of statements
+      parameters:
+        - $ref: '#/components/parameters/X-Auth-Token'
+        - $ref: '#/components/parameters/UserEmail'
+      requestBody:
+        $ref: '#/components/requestBodies/StatementIdArray'
+      responses:
+        '200':
+          $ref: '#/components/responses/StatementsFetched'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/ResourceNotFound'
+  /charges:
+    post:
+      summary: Query charges
+      description: Query a set of charges
+      parameters:
+        - $ref: '#/components/parameters/X-Auth-Token'
+        - $ref: '#/components/parameters/UserEmail'
+      requestBody:
+        $ref: '#/components/requestBodies/ChargeIdArray'
+      responses:
+        '200':
+          $ref: '#/components/responses/ChargesFetched'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/ResourceNotFound'
+  /statements/{statementId}:
+    get:
+      summary: Download statement file
+      description: "Download a statement PDF file"
+      parameters:
+        - $ref: '#/components/parameters/X-Auth-Token'
+        - $ref: '#/components/parameters/UserEmail'
+        - $ref: '#/components/parameters/StatementId'
+      responses:
+        '200':
+          $ref: '#/components/responses/StatementDownloadStarted'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/ResourceNotFound'
+  /contracts/{contractId}:
+    get:
+      summary: Download contract file
+      description: "Download a contract PDF file"
+      parameters:
+        - $ref: '#/components/parameters/X-Auth-Token'
+        - $ref: '#/components/parameters/UserEmail'
+        - $ref: '#/components/parameters/ContractId'
+      responses:
+        '200':
+          $ref: '#/components/responses/ContractDownloadStarted'
         '403':
           $ref: '#/components/responses/Forbidden'
         '404':
@@ -65,36 +143,6 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/ResourceNotFound'
-  /statements/{statementId}:
-    get:
-      summary: Get statement file
-      description: "Get download link for a statement file"
-      parameters:
-        - $ref: '#/components/parameters/X-Auth-Token'
-        - $ref: '#/components/parameters/UserEmail'
-        - $ref: '#/components/parameters/StatementId'
-      responses:
-        '200':
-          $ref: '#/components/responses/StatementFetched'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/ResourceNotFound'
-  /contracts/{contractId}:
-    get:
-      summary: Get contract file
-      description: "Get download link for a contract file"
-      parameters:
-        - $ref: '#/components/parameters/X-Auth-Token'
-        - $ref: '#/components/parameters/UserEmail'
-        - $ref: '#/components/parameters/ContractId'
-      responses:
-        '200':
-          $ref: '#/components/responses/ContractFetched'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/ResourceNotFound'
 components:
   schemas:
     Account:
@@ -102,27 +150,21 @@ components:
       properties:
         id:
           type: string
-          format: uuid
-          example: "0729a580-2240-11e6-9eb5-0002a5d5c51b"
-          description: UUID of account entity
-        statements:
-          type: array
-          items:
-            $ref: '#/components/schemas/Statement'
-          description: A list of statements associated with the account
-        payments:
-          type: array
-          items:
-            $ref: '#/components/schemas/Payment'
-          description: A list of payments made on the account
+          example: "3000001"
+          description: External ID of account
         mailingAddress:
           type: string
           example: "1840 Century Park East Los Angeles, CA 90067 USA"
           description: Mailing address of the account
-        email:
-          type: string
-          example: "bruce.willis@gmail.com"
-          description: Email address of the account
+        balance:
+          type: number
+          format: float
+          example: "62.19"
+          description: The dollar balance still due on the account
+        active:
+          type: boolean
+          example: "true"
+          description: Whether or not the account is active
         paymentMethod:
           type: string
           example: "creditCard"
@@ -131,65 +173,103 @@ components:
           type: string
           example: "email"
           description: The medium in which bills for the account are delivered
+        customer:
+          type: object
+          properties:
+            name:
+              type: string
+              example: "Bruce Willis"
+              description: Name of customer
+            phoneNumber:
+              type: string
+              example: "1 (123) 123-4567"
+            type:
+              type: string
+              example: "person"
+              description: The type of customer (person/company)
         charges:
           type: array
           items:
-            $ref: '#/components/schemas/Charge'
-          description: A list of charges associated with the account
-        customer:
-          $ref: '#/components/schemas/Customer'
+            type: object
+            properties:
+              id:
+                type: string
+                example: "1018"
+              date:
+                type: string
+                format: date
+                example: "2024-07-24"
+          description: An array of account charge IDs
+        statements:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                example: "1018"
+              date:
+                type: string
+                format: date
+                example: "2024-07-24"
+          description: A list of statement IDs and their statement dates associated with the account
+        payments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Payment'
+          description: A list of payments made on the account
+        emails:
+          type: array
+          items:
+            type: string
+            example: "bruce.willis@gmail.com"
+            description: Email address of the account
         sites:
           type: array
           items:
-            $ref: '#/components/schemas/Site'
-          description: A list of associated sites on the account
-    Customer:
-      type: object
-      properties:
-        name:
-          type: string
-          example: "Bruce Willis"
-          description: Name of customer
-        phoneNumber:
-          type: string
-          example: "1 (123) 123-4567"
-        type:
-          type: string
-          example: "person"
-          description: The type of customer (person/company)
+            type: string
+            example: "0020004001985"
+          description: A list of external site IDs associated with the account
     Site:
       type: object
       properties:
         id:
           type: string
-          format: uuid
-          example: "0729a580-2240-11e6-9eb5-0002a5d5c51b"
-          description: UUID of site entity
-        charges:
-          type: array
-          items:
-            $ref: '#/components/schemas/Charge'
-          description: A list of charges associated with the site
+          example: "0020004001985"
+          description: ID of the site
+        accountId:
+          type: string
+          example: "3000001"
+          description: ID of the site's associated account
         contracts:
           type: array
           items:
             $ref: '#/components/schemas/Contract'
           description: A list of contracts associated with the site
-        usage:
-          $ref: '#/components/schemas/Usage'
-        account:
-          type: string
-          format: uuid
-          example: "0729a580-2240-11e6-9eb5-0002a5d5c51b"
-          description: UUID of the site's associated account
+        charges:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                example: "1018"
+              date:
+                type: string
+                format: date
+                example: "2024-07-24"
+          description: An array of account charge IDs for the site
+        usages:
+          type: array
+          items:
+            $ref: '#/components/schemas/Usage'
     Statement:
       type: object
       properties:
         id:
           type: string
-          format: uuid
-          example: "0729a580-2240-11e6-9eb5-0002a5d5c51b"
-          description: UUID of statement entity
+          example: "1018"
+          description: ID of statement entity
         invoiceDate:
           type: string
           format: date
@@ -200,24 +280,33 @@ components:
           format: date
           example: "2024-07-24"
           description: The due date date of the statement
-        gst:
-          type: number
-          format: float
-          example: 7.23
-          description: The amount of GST on the bill
         amount:
           type: number
           format: float
           example: 150.49
           description: The total amount of the statement
+        gst:
+          type: number
+          format: float
+          example: 7.23
+          description: The amount of GST on the statement
+        downloadAvailable:
+          type: boolean
+          example: "true"
+          description: Whether or not the statement file is available for download
     Payment:
       type: object
       properties:
         id:
+          type: number
+          format: integer
+          example: 25
+          description: ID of the payment
+        date:
           type: string
-          format: uuid
-          example: "0729a580-2240-11e6-9eb5-0002a5d5c51b"
-          description: UUID of payment entity
+          format: timestamp
+          example: "2024-07-24"
+          description: The date the payment was made
         amount:
           type: number
           format: float
@@ -225,26 +314,38 @@ components:
           description: The amount of the payment
         method:
           type: string
-          example: "Mastercard 0023"
+          example: "EFT"
           description: The payment method used
-        time:
-          type: string
-          format: timestamp
-          example: "2024-07-24T15:00:00.015Z"
-          description: The time of the payment
     Charge:
       type: object
       properties:
         id:
           type: string
-          format: uuid
-          example: "0729a580-2240-11e6-9eb5-0002a5d5c51b"
-          description: UUID of charge entity
+          example: "501"
+          description: ID of the charge
+        date:
+          type: string
+          example: "1955-03-19"
+          description: The date the charge was applied
         amount:
           type: number
           format: float
           example: 150.49
           description: The amount of the charge
+        type:
+          type: string
+          example: "Local Access Fee"
+          description: The type of charge
+        statementId:
+          type: string
+          example: "1000"
+          description: ID of associated statement
+        pageNumber:
+          type: number
+          format: integer
+          nullable: true
+          example: 1
+          description: The page number of the statement that the charge is on
     Usage:
       type: object
       properties:
@@ -261,9 +362,9 @@ components:
         amount:
           type: number
           format: float
-          example: "347.12"
+          example: "123.1234"
           description: The amount of energy in the usage period
-        UOM:
+        uom:
           type: string
           example: "Killowatt hours"
           description: The unit of measure of the usage amount
@@ -293,11 +394,10 @@ components:
           type: string
           example: "Electricity - Maximizer"
           description: The program name for the contract
-    FileDownloadLink:
-      type: string
-      format: url
-      example: "files.com/download/123456"
-      description: A link to download a file
+        downloadAvailable:
+          type: boolean
+          example: "false"
+          description: Whether or not the contract file is available for download
     Data:
       type: object
       properties:
@@ -311,6 +411,10 @@ components:
           format: float
           example: 150.49
           description: The value of the data point
+    FileDownload:
+      type: string
+      format: binary
+      description: File download binary
     inline_response:
       required:
         - error
@@ -353,28 +457,26 @@ components:
       in: path
       schema:
         type: string
-        format: uuid
-        example: "0729a580-2240-11e6-9eb5-0002a5d5c51b"
+        example: "0020004001985"
       required: true
-      description: UUID of site entity
+      description: ID of the site
     StatementId:
       name: statementId
       in: path
       schema:
         type: string
-        format: uuid
-        example: "0729a580-2240-11e6-9eb5-0002a5d5c51b"
+        example: "1018"
       required: true
-      description: UUID of statement entity
+      description: ID of the statement
     ContractId:
       name: contractId
       in: path
       schema:
         type: string
         format: uuid
-        example: "0729a580-2240-11e6-9eb5-0002a5d5c51b"
+        example: "SOL0001"
       required: true
-      description: UUID of contract entity
+      description: ID of the contract
     StartDate:
       name: startDate
       in: query
@@ -393,6 +495,37 @@ components:
         example: "1955-03-19"
       required: true
       description: The end date of the query window
+  requestBodies:
+    SiteIdArray:
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: string
+              example: "0020004001985"
+      required: true
+      description: Array of site IDs
+    StatementIdArray:
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: string
+              example: "1019"
+      required: true
+      description: Array of statement IDs
+    ChargeIdArray:
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              type: string
+              example: "501"
+      required: true
+      description: Array of charge IDs
   responses:
     AccountsFetched:
       description: Successfully fetched user accounts
@@ -402,18 +535,42 @@ components:
             type: array
             items:
               $ref: '#/components/schemas/Account'
-    StatementFetched:
-      description: Successfully fetched statement
+    SitesFetched:
+      description: Successfully fetched sites
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/FileDownloadLink'
-    ContractFetched:
-      description: Successfully fetched contract
+            type: array
+            items:
+              $ref: '#/components/schemas/Site'
+    StatementsFetched:
+      description: Successfully fetched statements
       content:
         application/json:
           schema:
-            $ref: '#/components/schemas/FileDownloadLink'
+            type: array
+            items:
+              $ref: '#/components/schemas/Statement'
+    ChargesFetched:
+      description: Successfully fetched charges
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Charge'
+    StatementDownloadStarted:
+      description: Successfully started statement download
+      content:
+        application/pdf:
+          schema:
+            $ref: '#/components/schemas/FileDownload'
+    ContractDownloadStarted:
+      description: Successfully started contract download
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/FileDownload'
     GIMDataFetched:
       description: Successfully fetched GIM Data
       content:
