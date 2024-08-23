@@ -27,31 +27,33 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/ResourceNotFound'
-  /sites:
-    post:
-      summary: Query sites
-      description: Query a set of sites
+  /accounts/{accountId}/charges:
+    get:
+      summary: Query account charges
+      description: Query a set of charges for an account
       parameters:
         - $ref: '#/components/parameters/X-Auth-Token'
         - $ref: '#/components/parameters/UserEmail'
-      requestBody:
-        $ref: '#/components/requestBodies/SiteIdArray'
+        - $ref: '#/components/parameters/AccountId'
+        - $ref: '#/components/parameters/StartDate'
+        - $ref: '#/components/parameters/EndDate'
       responses:
         '200':
-          $ref: '#/components/responses/SitesFetched'
+          $ref: '#/components/responses/ChargesFetched'
         '403':
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/ResourceNotFound'
-  /statements:
-    post:
-      summary: Query statements
-      description: Query a set of statements
+  /accounts/{accountId}/statements:
+    get:
+      summary: Query account statements
+      description: Query a set of statements for an account
       parameters:
         - $ref: '#/components/parameters/X-Auth-Token'
         - $ref: '#/components/parameters/UserEmail'
-      requestBody:
-        $ref: '#/components/requestBodies/StatementIdArray'
+        - $ref: '#/components/parameters/AccountId'
+        - $ref: '#/components/parameters/StartDate'
+        - $ref: '#/components/parameters/EndDate'
       responses:
         '200':
           $ref: '#/components/responses/StatementsFetched'
@@ -59,18 +61,121 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/ResourceNotFound'
-  /charges:
-    post:
-      summary: Query charges
-      description: Query a set of charges
+  /accounts/{accountId}/payments:
+    get:
+      summary: Query account payments
+      description: Query a set of payments for an account
       parameters:
         - $ref: '#/components/parameters/X-Auth-Token'
         - $ref: '#/components/parameters/UserEmail'
-      requestBody:
-        $ref: '#/components/requestBodies/ChargeIdArray'
+        - $ref: '#/components/parameters/AccountId'
+        - $ref: '#/components/parameters/StartDate'
+        - $ref: '#/components/parameters/EndDate'
+      responses:
+        '200':
+          $ref: '#/components/responses/PaymentsFetched'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/ResourceNotFound'
+  /accounts/{accountId}/sites:
+    get:
+      summary: Get account sites
+      description: "Get a list of sites associated with an account"
+      parameters:
+        - $ref: '#/components/parameters/X-Auth-Token'
+        - $ref: '#/components/parameters/UserEmail'
+        - $ref: '#/components/parameters/AccountId'
+      responses:
+        '200':
+          $ref: '#/components/responses/SitesFetched'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/ResourceNotFound'
+  /sites/{siteId}/charges:
+    get:
+      summary: Query site charges
+      description: Query a set of charges for a site
+      parameters:
+        - $ref: '#/components/parameters/X-Auth-Token'
+        - $ref: '#/components/parameters/UserEmail'
+        - $ref: '#/components/parameters/SiteId'
+        - $ref: '#/components/parameters/StartDate'
+        - $ref: '#/components/parameters/EndDate'
       responses:
         '200':
           $ref: '#/components/responses/ChargesFetched'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/ResourceNotFound'
+  /sites/{siteId}/usages:
+    get:
+      summary: Query site usages
+      description: Query a set of usages for a site
+      parameters:
+        - $ref: '#/components/parameters/X-Auth-Token'
+        - $ref: '#/components/parameters/UserEmail'
+        - $ref: '#/components/parameters/SiteId'
+        - $ref: '#/components/parameters/StartDate'
+        - $ref: '#/components/parameters/EndDate'
+      responses:
+        '200':
+          $ref: '#/components/responses/UsagesFetched'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/ResourceNotFound'
+  /sites/{siteId}/contracts:
+    get:
+      summary: Query site contracts
+      description: Query a set of contracts for a site
+      parameters:
+        - $ref: '#/components/parameters/X-Auth-Token'
+        - $ref: '#/components/parameters/UserEmail'
+        - $ref: '#/components/parameters/SiteId'
+      responses:
+        '200':
+          $ref: '#/components/responses/ContractsFetched'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/ResourceNotFound'
+  /sites/{siteId}/GIMData:
+    get:
+      summary: Get site GIM data
+      description: "Get microGen Interval Data for a site"
+      parameters:
+        - $ref: '#/components/parameters/X-Auth-Token'
+        - $ref: '#/components/parameters/UserEmail'
+        - $ref: '#/components/parameters/SiteId'
+        - $ref: '#/components/parameters/StartDate'
+        - $ref: '#/components/parameters/EndDate'
+      responses:
+        '200':
+          $ref: '#/components/responses/GIMDataFetched'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/ResourceNotFound'
+  /sites/{siteId}/DIMData:
+    get:
+      summary: Get site DIM data
+      description: "Get Daily Interval Data for a site"
+      parameters:
+        - $ref: '#/components/parameters/X-Auth-Token'
+        - $ref: '#/components/parameters/UserEmail'
+        - $ref: '#/components/parameters/SiteId'
+        - $ref: '#/components/parameters/StartDate'
+        - $ref: '#/components/parameters/EndDate'
+      responses:
+        '200':
+          $ref: '#/components/responses/DIMDataFetched'
+        '400':
+          $ref: '#/components/responses/BadRequest'
         '403':
           $ref: '#/components/responses/Forbidden'
         '404':
@@ -105,44 +210,6 @@ paths:
           $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/ResourceNotFound'
-  /GIMData/{siteId}:
-    get:
-      summary: Get site GIM data
-      description: "Get microGen Interval Data for a site"
-      parameters:
-        - $ref: '#/components/parameters/X-Auth-Token'
-        - $ref: '#/components/parameters/UserEmail'
-        - $ref: '#/components/parameters/SiteId'
-        - $ref: '#/components/parameters/StartDate'
-        - $ref: '#/components/parameters/EndDate'
-      responses:
-        '200':
-          $ref: '#/components/responses/GIMDataFetched'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/ResourceNotFound'
-  /DIMData/{siteId}:
-    get:
-      summary: Get site DIM data
-      description: "Get Daily Interval Data for a site"
-      parameters:
-        - $ref: '#/components/parameters/X-Auth-Token'
-        - $ref: '#/components/parameters/UserEmail'
-        - $ref: '#/components/parameters/SiteId'
-        - $ref: '#/components/parameters/StartDate'
-        - $ref: '#/components/parameters/EndDate'
-      responses:
-        '200':
-          $ref: '#/components/responses/DIMDataFetched'
-        '400':
-          $ref: '#/components/responses/BadRequest'
-        '403':
-          $ref: '#/components/responses/Forbidden'
-        '404':
-          $ref: '#/components/responses/ResourceNotFound'
 components:
   schemas:
     Account:
@@ -169,10 +236,10 @@ components:
           type: string
           example: "creditCard"
           description: The method by which payments are made on the account
-        billMedium:
+        statementMedium:
           type: string
           example: "email"
-          description: The medium in which bills for the account are delivered
+          description: The medium in which statements for the account are delivered
         customer:
           type: object
           properties:
@@ -187,49 +254,12 @@ components:
               type: string
               example: "person"
               description: The type of customer (person/company)
-        charges:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-                example: "1018"
-              date:
-                type: string
-                format: date
-                example: "2024-07-24"
-          description: An array of account charge IDs
-        statements:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-                example: "1018"
-              date:
-                type: string
-                format: date
-                example: "2024-07-24"
-          description: A list of statement IDs and their statement dates associated with the account
-        payments:
-          type: array
-          items:
-            $ref: '#/components/schemas/Payment'
-          description: A list of payments made on the account
         emails:
           type: array
           items:
             type: string
             example: "bruce.willis@gmail.com"
             description: Email address of the account
-        sites:
-          type: array
-          items:
-            type: string
-            example: "0020004001985"
-          description: A list of external site IDs associated with the account
     Site:
       type: object
       properties:
@@ -237,32 +267,19 @@ components:
           type: string
           example: "0020004001985"
           description: ID of the site
-        accountId:
+        address:
           type: string
-          example: "3000001"
-          description: ID of the site's associated account
-        contracts:
-          type: array
-          items:
-            $ref: '#/components/schemas/Contract'
-          description: A list of contracts associated with the site
-        charges:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-                example: "1018"
-              date:
-                type: string
-                format: date
-                example: "2024-07-24"
-          description: An array of account charge IDs for the site
-        usages:
-          type: array
-          items:
-            $ref: '#/components/schemas/Usage'
+          example: "1840 Century Park East Los Angeles, CA 90067 USA"
+          description: Address of the site
+        enrolmentDate:
+          type: string
+          format: date
+          example: "2024-07-24"
+          description: The date that the site was enrolled
+        active:
+          type: boolean
+          example: "true"
+          description: Whether or not the site is currently active
     Statement:
       type: object
       properties:
@@ -404,7 +421,7 @@ components:
         time:
           type: string
           format: timestamp
-          example: "1955-03-19T00:00:00.000Z"
+          example: "1955-03-19T00:00:00"
           description: The timestamp associated with the data point
         value:
           type: number
@@ -452,6 +469,14 @@ components:
         type: string
         format: email
         example: "bruce.willis@gmail.com"
+    AccountId:
+      name: accountId
+      in: path
+      schema:
+        type: string
+        example: "3000001"
+      required: true
+      description: ID of the account
     SiteId:
       name: siteId
       in: path
@@ -495,40 +520,9 @@ components:
         example: "1955-03-19"
       required: true
       description: The end date of the query window
-  requestBodies:
-    SiteIdArray:
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              type: string
-              example: "0020004001985"
-      required: true
-      description: Array of site IDs
-    StatementIdArray:
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              type: string
-              example: "1019"
-      required: true
-      description: Array of statement IDs
-    ChargeIdArray:
-      content:
-        application/json:
-          schema:
-            type: array
-            items:
-              type: string
-              example: "501"
-      required: true
-      description: Array of charge IDs
   responses:
     AccountsFetched:
-      description: Successfully fetched user accounts
+      description: Successfully fetched accounts
       content:
         application/json:
           schema:
@@ -536,7 +530,7 @@ components:
             items:
               $ref: '#/components/schemas/Account'
     SitesFetched:
-      description: Successfully fetched sites
+      description: Successfully fetched account sites
       content:
         application/json:
           schema:
@@ -544,7 +538,7 @@ components:
             items:
               $ref: '#/components/schemas/Site'
     StatementsFetched:
-      description: Successfully fetched statements
+      description: Successfully fetched account statements
       content:
         application/json:
           schema:
@@ -559,6 +553,30 @@ components:
             type: array
             items:
               $ref: '#/components/schemas/Charge'
+    UsagesFetched:
+      description: Successfully fetched site usages
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Usage'
+    PaymentsFetched:
+      description: Successfully fetched account payments
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Payment'
+    ContractsFetched:
+      description: Successfully fetched site contracts
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Contract'
     StatementDownloadStarted:
       description: Successfully started statement download
       content:
