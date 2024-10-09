@@ -1,0 +1,637 @@
+openapi: 3.0.0
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/BUDWANDINGER_1/aub-integration-api/1.0.0
+info:
+  version: "1.0.0"
+  title: Alberta Utility Billing - Derbi Integration API
+  description: >-
+    TODO
+security:
+  - application:
+      - read
+      - write
+paths:
+  /accounts:
+    get:
+      summary: Get user accounts
+      description: "Get a list of accounts associated with a user"
+      parameters:
+        - $ref: '#/components/parameters/X-Auth-Token'
+        - $ref: '#/components/parameters/UserEmail'
+      responses:
+        '200':
+          $ref: '#/components/responses/AccountsFetched'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/ResourceNotFound'
+  /accounts/{accountId}/charges:
+    get:
+      summary: Query account charges
+      description: Query a set of charges for an account
+      parameters:
+        - $ref: '#/components/parameters/X-Auth-Token'
+        - $ref: '#/components/parameters/UserEmail'
+        - $ref: '#/components/parameters/AccountId'
+        - $ref: '#/components/parameters/StartDate'
+        - $ref: '#/components/parameters/EndDate'
+      responses:
+        '200':
+          $ref: '#/components/responses/ChargesFetched'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/ResourceNotFound'
+  /accounts/{accountId}/statements:
+    get:
+      summary: Query account statements
+      description: Query a set of statements for an account
+      parameters:
+        - $ref: '#/components/parameters/X-Auth-Token'
+        - $ref: '#/components/parameters/UserEmail'
+        - $ref: '#/components/parameters/AccountId'
+        - $ref: '#/components/parameters/StartDate'
+        - $ref: '#/components/parameters/EndDate'
+      responses:
+        '200':
+          $ref: '#/components/responses/StatementsFetched'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/ResourceNotFound'
+  /accounts/{accountId}/payments:
+    get:
+      summary: Query account payments
+      description: Query a set of payments for an account
+      parameters:
+        - $ref: '#/components/parameters/X-Auth-Token'
+        - $ref: '#/components/parameters/UserEmail'
+        - $ref: '#/components/parameters/AccountId'
+        - $ref: '#/components/parameters/StartDate'
+        - $ref: '#/components/parameters/EndDate'
+      responses:
+        '200':
+          $ref: '#/components/responses/PaymentsFetched'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/ResourceNotFound'
+  /accounts/{accountId}/sites:
+    get:
+      summary: Get account sites
+      description: "Get a list of sites associated with an account"
+      parameters:
+        - $ref: '#/components/parameters/X-Auth-Token'
+        - $ref: '#/components/parameters/UserEmail'
+        - $ref: '#/components/parameters/AccountId'
+      responses:
+        '200':
+          $ref: '#/components/responses/SitesFetched'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/ResourceNotFound'
+  /sites/{siteId}/charges:
+    get:
+      summary: Query site charges
+      description: Query a set of charges for a site
+      parameters:
+        - $ref: '#/components/parameters/X-Auth-Token'
+        - $ref: '#/components/parameters/UserEmail'
+        - $ref: '#/components/parameters/SiteId'
+        - $ref: '#/components/parameters/StartDate'
+        - $ref: '#/components/parameters/EndDate'
+      responses:
+        '200':
+          $ref: '#/components/responses/ChargesFetched'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/ResourceNotFound'
+  /sites/{siteId}/usages:
+    get:
+      summary: Query site usages
+      description: Query a set of usages for a site
+      parameters:
+        - $ref: '#/components/parameters/X-Auth-Token'
+        - $ref: '#/components/parameters/UserEmail'
+        - $ref: '#/components/parameters/SiteId'
+        - $ref: '#/components/parameters/StartDate'
+        - $ref: '#/components/parameters/EndDate'
+      responses:
+        '200':
+          $ref: '#/components/responses/UsagesFetched'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/ResourceNotFound'
+  /sites/{siteId}/contracts:
+    get:
+      summary: Query site contracts
+      description: Query a set of contracts for a site
+      parameters:
+        - $ref: '#/components/parameters/X-Auth-Token'
+        - $ref: '#/components/parameters/UserEmail'
+        - $ref: '#/components/parameters/SiteId'
+      responses:
+        '200':
+          $ref: '#/components/responses/ContractsFetched'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/ResourceNotFound'
+  /sites/{siteId}/GIMData:
+    get:
+      summary: Get site GIM data
+      description: "Get microGen Interval Data for a site"
+      parameters:
+        - $ref: '#/components/parameters/X-Auth-Token'
+        - $ref: '#/components/parameters/UserEmail'
+        - $ref: '#/components/parameters/SiteId'
+        - $ref: '#/components/parameters/StartDate'
+        - $ref: '#/components/parameters/EndDate'
+      responses:
+        '200':
+          $ref: '#/components/responses/GIMDataFetched'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/ResourceNotFound'
+  /sites/{siteId}/DIMData:
+    get:
+      summary: Get site DIM data
+      description: "Get Daily Interval Data for a site"
+      parameters:
+        - $ref: '#/components/parameters/X-Auth-Token'
+        - $ref: '#/components/parameters/UserEmail'
+        - $ref: '#/components/parameters/SiteId'
+        - $ref: '#/components/parameters/StartDate'
+        - $ref: '#/components/parameters/EndDate'
+      responses:
+        '200':
+          $ref: '#/components/responses/DIMDataFetched'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/ResourceNotFound'
+  /statements/{statementId}:
+    get:
+      summary: Download statement file
+      description: "Download a statement PDF file"
+      parameters:
+        - $ref: '#/components/parameters/X-Auth-Token'
+        - $ref: '#/components/parameters/UserEmail'
+        - $ref: '#/components/parameters/StatementId'
+      responses:
+        '200':
+          $ref: '#/components/responses/StatementDownloadStarted'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/ResourceNotFound'
+  /contracts/{contractId}:
+    get:
+      summary: Download contract file
+      description: "Download a contract PDF file"
+      parameters:
+        - $ref: '#/components/parameters/X-Auth-Token'
+        - $ref: '#/components/parameters/UserEmail'
+        - $ref: '#/components/parameters/ContractId'
+      responses:
+        '200':
+          $ref: '#/components/responses/ContractDownloadStarted'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/ResourceNotFound'
+components:
+  schemas:
+    Account:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "3000001"
+          description: External ID of account
+        mailingAddress:
+          type: string
+          example: "1840 Century Park East Los Angeles, CA 90067 USA"
+          description: Mailing address of the account
+        balance:
+          type: number
+          format: float
+          example: "62.19"
+          description: The dollar balance still due on the account
+        active:
+          type: boolean
+          example: "true"
+          description: Whether or not the account is active
+        paymentMethod:
+          type: string
+          example: "creditCard"
+          description: The method by which payments are made on the account
+        statementMedium:
+          type: string
+          example: "email"
+          description: The medium in which statements for the account are delivered
+        customer:
+          type: object
+          properties:
+            name:
+              type: string
+              example: "Bruce Willis"
+              description: Name of customer
+            phoneNumber:
+              type: string
+              example: "1 (123) 123-4567"
+            type:
+              type: string
+              example: "person"
+              description: The type of customer (person/company)
+        emails:
+          type: array
+          items:
+            type: string
+            example: "bruce.willis@gmail.com"
+            description: Email address of the account
+    Site:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "0020004001985"
+          description: ID of the site
+        address:
+          type: string
+          example: "1840 Century Park East Los Angeles, CA 90067 USA"
+          description: Address of the site
+        enrolmentDate:
+          type: string
+          format: date
+          example: "2024-07-24"
+          description: The date that the site was enrolled
+        active:
+          type: boolean
+          example: "true"
+          description: Whether or not the site is currently active
+    Statement:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "1018"
+          description: ID of statement entity
+        invoiceDate:
+          type: string
+          format: date
+          example: "2024-07-24"
+          description: The invoice date of the statement
+        dueDate:
+          type: string
+          format: date
+          example: "2024-07-24"
+          description: The due date date of the statement
+        amount:
+          type: number
+          format: float
+          example: 150.49
+          description: The total amount of the statement
+        gst:
+          type: number
+          format: float
+          example: 7.23
+          description: The amount of GST on the statement
+        downloadAvailable:
+          type: boolean
+          example: "true"
+          description: Whether or not the statement file is available for download
+    Payment:
+      type: object
+      properties:
+        id:
+          type: number
+          format: integer
+          example: 25
+          description: ID of the payment
+        date:
+          type: string
+          format: timestamp
+          example: "2024-07-24"
+          description: The date the payment was made
+        amount:
+          type: number
+          format: float
+          example: 150.49
+          description: The amount of the payment
+        method:
+          type: string
+          example: "EFT"
+          description: The payment method used
+    Charge:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "501"
+          description: ID of the charge
+        date:
+          type: string
+          example: "1955-03-19"
+          description: The date the charge was applied
+        amount:
+          type: number
+          format: float
+          example: 150.49
+          description: The amount of the charge
+        type:
+          type: string
+          example: "Local Access Fee"
+          description: The type of charge
+        statementId:
+          type: string
+          example: "1000"
+          description: ID of associated statement
+        pageNumber:
+          type: number
+          format: integer
+          nullable: true
+          example: 1
+          description: The page number of the statement that the charge is on
+    Usage:
+      type: object
+      properties:
+        periodStart:
+          type: string
+          format: date
+          example: "1955-03-19"
+          description: The start date of the usage period
+        periodEnd:
+          type: string
+          format: date
+          example: "1955-03-19"
+          description: The end date of the usage period
+        amount:
+          type: number
+          format: float
+          example: "123.1234"
+          description: The amount of energy in the usage period
+        uom:
+          type: string
+          example: "Killowatt hours"
+          description: The unit of measure of the usage amount
+    Contract:
+      type: object
+      properties:
+        id:
+          type: string
+          example: "SOL0001"
+          description: The ID code of the contract
+        startDate:
+          type: string
+          format: date
+          example: "1955-03-19"
+          description: The start date of the contract
+        endDate:
+          type: string
+          format: date
+          example: "1955-03-19"
+          description: The end date of the contract
+        adminFee:
+          type: number
+          format: float
+          example: "8.00"
+          description: The surcharge amount associated with the contract
+        programName:
+          type: string
+          example: "Electricity - Maximizer"
+          description: The program name for the contract
+        downloadAvailable:
+          type: boolean
+          example: "false"
+          description: Whether or not the contract file is available for download
+    Data:
+      type: object
+      properties:
+        time:
+          type: string
+          format: timestamp
+          example: "1955-03-19T00:00:00"
+          description: The timestamp associated with the data point
+        value:
+          type: number
+          format: float
+          example: 150.49
+          description: The value of the data point
+    FileDownload:
+      type: string
+      format: binary
+      description: File download binary
+    inline_response:
+      required:
+        - error
+        - errorCode
+      type: object
+      properties:
+        error:
+          type: string
+        errorCode:
+          type: integer
+  securitySchemes:
+    application:
+      type: oauth2
+      flows:
+        clientCredentials:
+          tokenUrl: 'http://example.com/oauth/token'
+          scopes:
+            write: allows modifying resources
+            read: allows reading resources
+  parameters:
+    X-Auth-Token:
+      name: X-Auth-Token
+      description: Authentication token
+      in: header
+      required: true
+      schema:
+        type: string
+        example: "YnJ1Y2Uud2lsbGlzQGdtYWlsLmNvbTpCaWdCcnVjZQ=="
+    UserEmail:
+      name: userEmail
+      description: Email of user
+      in: header
+      required: true
+      schema:
+        type: string
+        format: email
+        example: "bruce.willis@gmail.com"
+    AccountId:
+      name: accountId
+      in: path
+      schema:
+        type: string
+        example: "3000001"
+      required: true
+      description: ID of the account
+    SiteId:
+      name: siteId
+      in: path
+      schema:
+        type: string
+        example: "0020004001985"
+      required: true
+      description: ID of the site
+    StatementId:
+      name: statementId
+      in: path
+      schema:
+        type: string
+        example: "1018"
+      required: true
+      description: ID of the statement
+    ContractId:
+      name: contractId
+      in: path
+      schema:
+        type: string
+        format: uuid
+        example: "SOL0001"
+      required: true
+      description: ID of the contract
+    StartDate:
+      name: startDate
+      in: query
+      schema:
+        type: string
+        format: date
+        example: "1955-03-19"
+      required: true
+      description: The start date of the query window
+    EndDate:
+      name: endDate
+      in: query
+      schema:
+        type: string
+        format: date
+        example: "1955-03-19"
+      required: true
+      description: The end date of the query window
+  responses:
+    AccountsFetched:
+      description: Successfully fetched accounts
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Account'
+    SitesFetched:
+      description: Successfully fetched account sites
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Site'
+    StatementsFetched:
+      description: Successfully fetched account statements
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Statement'
+    ChargesFetched:
+      description: Successfully fetched charges
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Charge'
+    UsagesFetched:
+      description: Successfully fetched site usages
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Usage'
+    PaymentsFetched:
+      description: Successfully fetched account payments
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Payment'
+    ContractsFetched:
+      description: Successfully fetched site contracts
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/Contract'
+    StatementDownloadStarted:
+      description: Successfully started statement download
+      content:
+        application/pdf:
+          schema:
+            $ref: '#/components/schemas/FileDownload'
+    ContractDownloadStarted:
+      description: Successfully started contract download
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/FileDownload'
+    GIMDataFetched:
+      description: Successfully fetched GIM Data
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/Data"
+    DIMDataFetched:
+      description: Successfully fetched DIM Data
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/Data"
+    BadRequest:
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response'
+          example:
+            value:
+              error: 'Request body error: line 4, char 0'
+              errorCode: 400
+    Forbidden:
+      description: Invalid authentication or insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response'
+          example:
+            value:
+              error: Invalid authentication or insufficient permissions
+              errorCode: 403
+    ResourceNotFound:
+      description: Cannot find request resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/inline_response'
+          example:
+            value:
+              error: 'Entity does NOT exist: 12345678-90ab-cdef-1234-567890abcdef'
+              errorCode: 404
